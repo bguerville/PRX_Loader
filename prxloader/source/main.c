@@ -137,10 +137,12 @@ int get_lv2_version()
 			return 0x460C;
 		break;
 		case 0x800000000034F960ULL:
-			return 0x465C; //0x466C
+			if(lv2_peek(0x800000000031EBA8ULL)==0x323031342F31312FULL) return 0x466C;
+			else return 0x465C;
 		break;
 		case 0x8000000000375510ULL:
-			return 0x465D;
+			if(lv2_peek(0x800000000031EBA8ULL)==0x323031342F31312FULL) return 0x466D;
+			else return 0x465D;
 		break;
 		default:
 			return 0;
