@@ -12,32 +12,26 @@ Changes in VSH PRX Loader 1.08 (unofficial by NzV):
 Changes in VSH PRX Loader 1.07 (unofficial by Joonie): 
 
 	* Added payload for 4.65 dex by Joonie 
-	
 	* plugin's default path is now set to "dev_hdd0/game/PRXLOADER/USRDIR/plugins.txt" [it is the same as the original PRX loader by @user ] 
-	
 	-Due to various VSH plugin loader usages on various Cobra cfw builds, plugin path is changed back to the original- 
 
 	
 Changes in VSH PRX Loader 1.06 (unofficial by Joonie): 
 
 	* Added payload for 4.65 cex by Joonie
-	
 	* plugin's default path is now set to "dev_hdd0/boot_plugins.txt" [it is the same as Cobra's CFW] 
-	
 	* 4.50 DEX support is fixed due to proper compilation 
 	
 	
 Changes in VSH PRX Loader 1.05 (unofficial by Joonie): 
 
 	* Added payload for 4.60 cex by Joonie 
-	
 	* Payload 4.50 dex is voided for the moment. 
 
 	
 Changes in VSH PRX Loader 1.04 (official by u$er): 
 
 	* Added payload for 4.55 cex 
-	
 	* Added lv2 protection patch(4.46), so rebug users can skip the toolbox step 
 
 	
