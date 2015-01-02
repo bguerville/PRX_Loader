@@ -7,6 +7,8 @@ Changes in VSH PRX Loader 1.08 (unofficial by NzV):
 	* Added payload for 3.55CEX, 4.30CEX, 4.30DEX, 4.31CEX, 4.40CEX, 4.41CEX, 4.41DEX, 4.53DEX
 	* Payload modified (add get_vsh_process() in the payload instead of the loader)
 	* Now if cobra/mamba is detected the payload will be no more installed, and the loader will use cobra/mamba syscall8 instead to load plugins
+	* Add success/error ring buzzer notification
+	[If buzzer ring one time cobra/mamba was detect and used to load plugins, if buzzer ring two times cobra/mamba was not detected so the payload was used to load plugins, if buzzer ring three times an error as occurred]
 
 	
 Changes in VSH PRX Loader 1.07 (unofficial by Joonie): 
