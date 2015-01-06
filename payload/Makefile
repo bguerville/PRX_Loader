@@ -3,8 +3,8 @@ clean:
 all:
 	make -f Makefile_3.55 clean --no-print-directory
 	make -f Makefile_3.55 --no-print-directory
-	#make -f Makefile_3.55D clean --no-print-directory
-	#make -f Makefile_3.55D --no-print-directory
+	make -f Makefile_3.55D clean --no-print-directory
+	make -f Makefile_3.55D --no-print-directory
 	make -f Makefile_4.21 clean --no-print-directory
 	make -f Makefile_4.21 --no-print-directory
 	make -f Makefile_4.21D clean --no-print-directory

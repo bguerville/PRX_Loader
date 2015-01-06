@@ -358,7 +358,7 @@
     #define prx_unload_module_symbol                    0x89494 // bytes matched: 0x28  F821FF617C0802A6FB810080FBC100907C7C07B47C9E2378FBA10088FBE10098
     #define extend_kstack_symbol                        0x6FDA4 // bytes matched: 0x18  F821FF717C0802A6FB810070F80100A0FBA100787C7D1B78
     #define syscall_table_symbol                        0x361578 // Found by Joonie
-	//#define process_rtoc_entry_1					
+	#define process_rtoc_entry_1						-0x7760 //found at 0x1B4FF 88A03FC0800163DE0005E87D0000				
 #elif defined(FIRMWARE_4_21DEX)  // Ported by Joonie, Big thanks to @aldostools for his awesome getsymbol tool :)
     #define TOC                                         0x363E80 //done
     #define copy_from_user_symbol                       0x100C0 // bytes matched: 0x64  2C2500007C0802A6F821FF71FBA10078FBC10080FBE10088FB8100707C7F1B78
