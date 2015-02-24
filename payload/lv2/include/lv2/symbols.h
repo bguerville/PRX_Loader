@@ -334,6 +334,32 @@
     #define extend_kstack_symbol				0x7001C //
     #define syscall_table_symbol				0x363A18 //
 	#define process_rtoc_entry_1						-0x7800
+#elif defined(FIRMWARE_4_70) 
+	#define TOC								0x34FB10 //done
+	#define copy_from_user_symbol			0xFA84 // bytes matched: 0x64  2C2500007C0802A6F821FF71FBA10078FBC10080FBE10088FB8100707C7F1B78
+	#define copy_from_process_symbol		0xF730 // bytes matched: 0x74  F821FF417C0802A62C240000FB6100983F608001FB210088FB8100A0FB010080
+	#define page_allocate_symbol			0x60390 // bytes matched: 0x60  7C8023787CA92B787CCB33787CE83B787C641B787C0503787D264B787D675B78
+	#define page_free_symbol				0x5FDF4 // bytes matched: 0x80  E9629C987C0802A6F821FF61F80100B0FBC10090FBE10098E92B00007C7F1B78
+	#define page_export_to_proc_symbol		0x6052C // bytes matched: 0x80  F821FF717C0802A63D20000CF80100A054A0031AFBE100887FA048003D208001
+	#define page_unexport_from_proc_symbol	0x5FCE8 // bytes matched: 0x80  E8630030480110882BA3003C7C0802A6F821FF91F80100807C8B23787C601B78
+	#define printf_symbol					0x270634 // bytes matched: 0x34****  FBA100987C7D1B787F63DB78F8E10100F9010108F9210110F9410118FB810090
+	#define sprintf_symbol					0x4EA90 // bytes matched: 0x80  F821FF817C0802A6F8A100C0F8010090380100C0E8A295A8F8C100C8F8610078
+	#define snprintf_symbol					0x4E9FC // bytes matched: 0x80  F821FF717C0802A6F8C100D8F80100A0380100D8F8610078908100807CA32B78
+	#define strcmp_symbol					0x4D7C0 // bytes matched: 0x80  880300007C691B78896400007F8B00007C0B0050409E002C2F8B0000409E000C
+	#define ppu_thread_join_symbol			0x13FD0 // bytes matched: 0x80  F821FF617C0802A6FB810080F80100B0FBA10088FBC100907C7D1B78FBE10098
+	#define create_user_thread2_symbol		0x2507C // bytes matched: 0x80  F821FEF17C0802A6FA8100B0F8010120800900287CD43378FAA100B8FAC100C0
+	#define start_thread_symbol				0x23D48 // bytes matched: 0x80  7D800026F821FF61FB410070FB610078FB810080FBA10088FBC10090FBE10098
+	#define run_thread_symbol				0x23578 // bytes matched: 0x30  7C641B78E863004848002EB0F821FF717C0802A6FBC100807C7E1B78FBA10078
+	#define register_thread_symbol			0x2678D4 // bytes matched: 0x80  7D800026F821FF712C240000FBC10080FBE10088FBA100787C9F23787C7E1B78
+	#define allocate_user_stack_symbol		0x2680BC // bytes matched: 0x50  F821FF617C0802A6FBA10088F80100B0E803003038C10070FBC100902FA00000
+	#define deallocate_user_stack_symbol	0x268024 // bytes matched: 0x38  F821FF717C0802A6FBA10078F80100A0E80300307CBD2B78FBC100802FA00000
+	#define prx_load_module_symbol			0x88C00 // bytes matched: 0x80  F821FF717C0802A6FB8100707CBC2B7838A00001FBA10078FBC10080FBE10088
+	#define prx_start_module_symbol			0x878CC // bytes matched: 0x80  7D800026F821FEF1FB2100D8FB4100E07C7907B47C9A2378FB0100D0FB8100F0
+	#define prx_stop_module_symbol			0x88CA4 // bytes matched: 0x80  F821FF617C0802A6FBA10088FBC100907C7D1B787C9E2378FB810080F80100B0
+	#define prx_unload_module_symbol		0x87600 // bytes matched: 0x80  F821FF617C0802A6FB810080FBC100907C7C07B47C9E2378FBA10088FBE10098
+	#define extend_kstack_symbol			0x700A0 // bytes matched: 0x18  F821FF717C0802A6FB810070F80100A0FBA100787C7D1B78
+	#define syscall_table_symbol			0x363B60 //done
+	#define process_rtoc_entry_1			-0x7800 //found at 0x1A153 88003FC0800163DE0005E87D0000
 #elif defined(FIRMWARE_3_55DEX)  // Ported by Joonie, Big thanks to @aldostools for his amazing tool, special thanks to @Estwald
     #define TOC                                         0x34AC80 //done
     #define copy_from_user_symbol                       0xFF08 // bytes matched: 0x60  2C2500007C0802A6F821FF71FBA10078FBC10080FBE10088FB8100707C7F1B78

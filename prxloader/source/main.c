@@ -144,6 +144,9 @@ int get_lv2_version()
 			if(lv2_peek(0x800000000031EBA8ULL)==0x323031342F31312FULL) return 0x466D;
 			else return 0x465D;
 		break;
+		case 0x800000000034FB10ULL:
+			return 0x470C;
+		break;
 		default:
 			return 0;
 		break;
@@ -221,6 +224,9 @@ uint64_t get_syscall_table()
 		break;
 		case 0x466C:
 			return 0x8000000000363A18ULL;
+		break;
+		case 0x470C:
+			return 0x8000000000363B60ULL;
 		break;
 		default:
 			return 0;
