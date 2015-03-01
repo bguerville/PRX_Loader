@@ -4,7 +4,7 @@ To add new plugins it is necessary to edit /dev_hdd0/game/PRXLOADER/USRDIR/plugi
 
 Changes in VSH PRX Loader 1.09 (unofficial by NzV): 
 
-	* Added payload for 4.70CEX, 4.30CEX, 4.30DEX, 4.31CEX, 4.40CEX, 4.41CEX, 4.41DEX, 4.53DEX , 4.66CEX, 4.66DEX
+	* Added payload for 4.70CEX
 
 	
 Changes in VSH PRX Loader 1.08 (unofficial by NzV): 
