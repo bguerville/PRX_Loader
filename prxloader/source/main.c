@@ -272,9 +272,11 @@ void write_htab(void)
 //----------------------------------------
 
 #define SYSCALL8_OPCODE_GET_VERSION				0x7000
+#define SYSCALL8_OPCODE_GET_MAMBA				0x7FFF
 #define SYSCALL_OPCODE_LOAD_VSH_PLUGIN			0x1EE7
 #define SYSCALL_OPCODE_UNLOAD_VSH_PLUGIN		0x364F
-#define MAX_VSH_PLUGINS							6
+#define MAX_VSH_PLUGINS							7
+#define BOOT_PLUGINS_FIRST_SLOT					1
 #define PRX_PAYLOAD_PATH						"/dev_hdd0/game/PRXLOADER/USRDIR/payloads/payload_%X.bin"
 #define PLUGINS_PATH							"/dev_hdd0/game/PRXLOADER/USRDIR/plugins.txt"
 
@@ -296,12 +298,26 @@ int sys8_get_version(u32 *version)
     return_to_user_prog(int);
 }
 
-int is_cobra_based(void)
+int sys8_get_mamba(void)
+{
+	lv2syscall1(8, SYSCALL8_OPCODE_GET_MAMBA);
+    return_to_user_prog(int);
+}
+
+int is_cobra(void)
 {
     u32 version = 0x99999999;
-    if (sys8_get_version(&version) < 0) return 0;
-    else if (version != 0x99999999) return 1;
-    else return 0;
+    if (sys8_get_version(&version) < 0)	return 0;
+    if (version != 0x99999999 && sys8_get_mamba() != 0x666)	return 1;
+    return 0;
+}
+
+int is_mamba(void)
+{
+	u32 version = 0x99999999;
+    if (sys8_get_version(&version) < 0)	return 0;
+    if (version != 0x99999999 && sys8_get_mamba() == 0x666)	return 1;
+    return 0;
 }
 
 uint8_t * read_file(char *path, uint32_t * file_size, uint16_t round)
@@ -337,10 +353,10 @@ uint32_t load_all_prx(char * config_path, int use_payload)
 {
 	char line[256];
 	int len;
-	uint32_t slot = 0;
+	uint32_t slot = BOOT_PLUGINS_FIRST_SLOT;
 	FILE * f = fopen(config_path,"r");
 	if(!f) return 0;
-	while(fgets(line, sizeof line, f) != NULL && slot < 6)
+	while(fgets(line, sizeof line, f) != NULL && slot < MAX_VSH_PLUGINS)
 	{
 		len = strlen(line);
 		if(line[0] != '/' || len == 0) continue;
@@ -348,7 +364,7 @@ uint32_t load_all_prx(char * config_path, int use_payload)
 		if(line[len-2] == '\r') line[len-2] = 0;
 		if(use_payload == 0) syscall_8_load_prx_module(slot, line, 0, 0);
 		else if(use_payload == 1) syscall_1022_load_prx_module(slot, line, 0, 0);
-		slot++;
+		slot++; 
 	}
 	fclose(f);
 	return slot;
@@ -356,7 +372,18 @@ uint32_t load_all_prx(char * config_path, int use_payload)
 
 int main()
 {
-	if(!is_cobra_based())
+	if (is_cobra())
+	{
+		{lv2syscall3(392, 0x1004, 0xa, 0x1b6); }
+		return -1;
+	}
+	else if (is_mamba())
+	{
+		load_all_prx(PLUGINS_PATH, 0);
+		{lv2syscall3(392, 0x1004, 0x4, 0x6); }
+		return 0;
+	}
+	else
 	{
 		int lv2_version = get_lv2_version();
 		if(!lv2_version) {{lv2syscall3(392, 0x1004, 0xa, 0x1b6); } return -1; }
@@ -379,11 +406,7 @@ int main()
 		lv2_poke(0x8000000000003D90ULL, 0x386000014E800020ULL); // /patch permission 4.xx, usually "fixed" by warez payload
 		load_all_prx(PLUGINS_PATH, 1);
 		{lv2syscall3(392, 0x1004, 0x7, 0x36); }
-	}
-	else
-	{
-		load_all_prx(PLUGINS_PATH, 0);
-		{lv2syscall3(392, 0x1004, 0x4, 0x6); }
+		return 0;
 	}
 	return 0;
 }
