@@ -29,51 +29,6 @@ void lv2_poke(uint64_t addr, uint64_t val)
     lv2syscall2(7, addr, val);
 }
 
-uint64_t find_syscall()
-{
-	uint64_t i = LV2_END_SEEK;
-
-	while(i>LV2_BEGIN_SEEK)
-	{
-		if(lv2_peek(i) == SYSCALL_NOT_IMPL)
-			if(((lv2_peek(i+8) >> 32) & 0xFFFFFFFF) == SYSCALL_NOT_IMPL2)
-				return i;
-		i-=4;
-	}
-	return 0;
-}
-
-uint64_t reverse_search64(uint64_t val)
-{
-	uint64_t i = LV2_END_SEEK;
-
-	while(i>LV2_BEGIN_SEEK)
-	{
-		if(lv2_peek(i) == val) return i;
-		i-=4;
-	}
-	return 0;
-}
-
-uint64_t search64(uint64_t val)
-{
-	uint64_t i;
-
-	for(i=LV2_BEGIN_SEEK;i<LV2_END_SEEK;i+=4)
-	{
-		if(lv2_peek(i) == val) return i;
-	}
-	return 0;
-}
-
-uint64_t find_syscall_table()
-{
-	uint64_t sc, opd_sc;
-	sc = find_syscall();
-	opd_sc = reverse_search64(sc);
-	return search64(opd_sc);
-}
-
 int get_lv2_version()
 {
 	uint64_t toc = lv2_peek(0x8000000000003000ULL);
@@ -225,6 +180,9 @@ uint64_t get_syscall_table()
 		case 0x466C:
 			return 0x8000000000363A18ULL;
 		break;
+		case 0x466D:
+			return 0x800000000038A120ULL;
+		break;
 		case 0x470C:
 			return 0x8000000000363B60ULL;
 		break;
@@ -232,22 +190,6 @@ uint64_t get_syscall_table()
 			return 0;
 		break;
 	}
-	return 0;
-}
-
-int install_syscall(int syscall_number, uint64_t *payload, uint32_t payload_size, uint64_t install_offset)
-{
-	uint64_t syscall_table = get_syscall_table();
-	uint64_t payload_opd = install_offset + payload_size + 0x10;
-	int i;	
-	if(syscall_table)
-	{
-		for(i=0;i<(payload_size/8);i++) lv2_poke(install_offset+(i*8), payload[i]);
-		lv2_poke(payload_opd, install_offset);
-		lv2_poke(syscall_table + (8*syscall_number), payload_opd);
-		return 1;
-	}
-
 	return 0;
 }
 
@@ -400,7 +342,7 @@ int main()
 		write_htab();
 		sprintf(payload_path, PRX_PAYLOAD_PATH, lv2_version);
 		payload = (uint64_t *) read_file(payload_path, &size, 8);
-		if(payload == NULL) {{free(payload); lv2syscall3(392, 0x1004, 0xa, 0x1b6); } return -1; }
+		if(!payload) {{lv2syscall3(392, 0x1004, 0xa, 0x1b6); } return -1; }
 		if (install_syscall(1022, payload, size, 0x80000000007F0000ULL) != 1) {free(payload); {lv2syscall3(392, 0x1004, 0xa, 0x1b6); } return -1; }
 		free(payload);
 		lv2_poke(0x8000000000003D90ULL, 0x386000014E800020ULL); // /patch permission 4.xx, usually "fixed" by warez payload
