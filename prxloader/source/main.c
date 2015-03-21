@@ -193,6 +193,22 @@ uint64_t get_syscall_table()
 	return 0;
 }
 
+int install_syscall(int syscall_number, uint64_t *payload, uint32_t payload_size, uint64_t install_offset)
+{
+	uint64_t syscall_table = get_syscall_table();
+	uint64_t payload_opd = install_offset + payload_size + 0x10;
+	int i;	
+	if(syscall_table)
+	{
+		for(i=0;i<(payload_size/8);i++) lv2_poke(install_offset+(i*8), payload[i]);
+		lv2_poke(payload_opd, install_offset);
+		lv2_poke(syscall_table + (8*syscall_number), payload_opd);
+		return 1;
+	}
+
+	return 0;
+}
+
 void write_htab(void)
 {
     uint64_t cont = 0;
