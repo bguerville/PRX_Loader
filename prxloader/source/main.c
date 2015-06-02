@@ -2,6 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ppu-lv2.h>
+#include <sys/file.h>
+#include <sys/stat.h>
+
+#define SUCCESS 	0
+#define FAILED	 	-1
 
 //----------------------------------------
 //LV1/2 UTILS
@@ -102,6 +107,12 @@ int get_lv2_version()
 		case 0x800000000034FB10ULL:
 			return 0x470C;
 		break;
+		case 0x8000000000375850ULL:
+			return 0x470D;
+		break;
+		case 0x800000000034FBB0ULL:
+			return 0x475C;
+		break;
 		default:
 			return 0;
 		break;
@@ -186,6 +197,12 @@ uint64_t get_syscall_table()
 		case 0x470C:
 			return 0x8000000000363B60ULL;
 		break;
+		case 0x470D:
+			return 0x800000000038A368ULL;
+		break;
+		case 0x475C:
+			return 0x8000000000363BE0ULL;
+		break;
 		default:
 			return 0;
 		break;
@@ -203,10 +220,9 @@ int install_syscall(int syscall_number, uint64_t *payload, uint32_t payload_size
 		for(i=0;i<(payload_size/8);i++) lv2_poke(install_offset+(i*8), payload[i]);
 		lv2_poke(payload_opd, install_offset);
 		lv2_poke(syscall_table + (8*syscall_number), payload_opd);
-		return 1;
+		return SUCCESS;
 	}
-
-	return 0;
+	return FAILED;
 }
 
 void write_htab(void)
@@ -266,18 +282,17 @@ int is_cobra(void)
 {
     u32 version = 0x99999999;
     if (sys8_get_version(&version) < 0)	return 0;
-    if (version != 0x99999999 && sys8_get_mamba() != 0x666)	return 1;
-    return 0;
+    if (version != 0x99999999 && sys8_get_mamba() != 0x666)	return SUCCESS;
+    return FAILED;
 }
 
 int is_mamba(void)
 {
 	u32 version = 0x99999999;
     if (sys8_get_version(&version) < 0)	return 0;
-    if (version != 0x99999999 && sys8_get_mamba() == 0x666)	return 1;
-    return 0;
+    if (version != 0x99999999 && sys8_get_mamba() == 0x666)	return SUCCESS;
+    return FAILED;
 }
-
 uint8_t * read_file(char *path, uint32_t * file_size, uint16_t round)
 {
 	uint8_t * buf;
@@ -286,10 +301,9 @@ uint8_t * read_file(char *path, uint32_t * file_size, uint16_t round)
 	FILE * f = fopen(path, "rb");
 	if(f)
 	{
-		uint32_t size = fseek(f, 0, SEEK_END);
+		size = fseek(f, 0, SEEK_END);
 		size = ftell(f);
 		fseek(f, 0, SEEK_SET);
-
 		if(round)
 		{
 			rest = size % round;
@@ -301,7 +315,9 @@ uint8_t * read_file(char *path, uint32_t * file_size, uint16_t round)
 		fclose(f);
 		*(file_size) = size;
 		return buf;
-	}else{
+	}
+	else
+	{
 		*(file_size) = 0;
 		return NULL;
 	}
@@ -328,44 +344,77 @@ uint32_t load_all_prx(char * config_path, int use_payload)
 	return slot;
 }
 
+sysFSStat stat1;
+
+int dir_exists(const char *path)
+{
+    int ret = sysLv2FsStat(path, &stat1);
+    if(ret == SUCCESS && S_ISDIR(stat1.st_mode)) return SUCCESS;
+    return FAILED;
+}
+
 int main()
 {
-	if (is_cobra())
+	if (is_cobra() == SUCCESS)
 	{
 		{lv2syscall3(392, 0x1004, 0xa, 0x1b6); }
-		return -1;
+		return FAILED;
 	}
-	else if (is_mamba())
+	else if (is_mamba() == SUCCESS)
 	{
 		load_all_prx(PLUGINS_PATH, 0);
 		{lv2syscall3(392, 0x1004, 0x4, 0x6); }
-		return 0;
+		return SUCCESS;
 	}
 	else
 	{
 		int lv2_version = get_lv2_version();
-		if(!lv2_version) {{lv2syscall3(392, 0x1004, 0xa, 0x1b6); } return -1; }
+		if(!lv2_version)
+		{
+			{lv2syscall3(392, 0x1004, 0xa, 0x1b6); }
+			return -1;
+		}
 		uint64_t * payload;
 		uint32_t size;
 		char payload_path[256];
-		if((lv2_version>>4) == 0x446)//patch lv2 protection (rebug only, doesn't affect others)
+		//Patch lv2 protection (rebug only, ps3ita?), No need if not fw 4.xx or 4.53 +
+		if ((dir_exists("/dev_flash/rebug") == SUCCESS) || (dir_exists("/dev_flash/ps3ita") == SUCCESS) )
 		{
-			lv1_poke(0x370AA8, 0x0000000000000001ULL);
-			lv1_poke(0x370AA8 + 8, 0xE0D251B556C59F05ULL);
-			lv1_poke(0x370AA8 + 16, 0xC232FCAD552C80D7ULL);
-			lv1_poke(0x370AA8 + 24, 0x65140CD200000000ULL);
-		}
+			if((lv2_version > 0x355D) && (lv2_version <= 0x421D))
+			{
+				lv1_poke(0x370A28 +  0, 0x0000000000000001ULL);
+				lv1_poke(0x370A28 +  8, 0xe0d251b556c59f05ULL);
+				lv1_poke(0x370A28 + 16, 0xc232fcad552c80d7ULL);
+				lv1_poke(0x370A28 + 24, 0x65140cd200000000ULL); 
+			}
+			else if((lv2_version > 0x421D) && (lv2_version < 0x453C)) 
+			{
+				lv1_poke(0x370AA8 +  0, 0x0000000000000001ULL);
+				lv1_poke(0x370AA8 +  8, 0xe0d251b556c59f05ULL);
+				lv1_poke(0x370AA8 + 16, 0xc232fcad552c80d7ULL);
+				lv1_poke(0x370AA8 + 24, 0x65140cd200000000ULL); 
+			}
+		}	
 		write_htab();
 		sprintf(payload_path, PRX_PAYLOAD_PATH, lv2_version);
 		payload = (uint64_t *) read_file(payload_path, &size, 8);
-		if(!payload) {{lv2syscall3(392, 0x1004, 0xa, 0x1b6); } return -1; }
-		if (install_syscall(1022, payload, size, 0x80000000007F0000ULL) != 1) {free(payload); {lv2syscall3(392, 0x1004, 0xa, 0x1b6); } return -1; }
+		if(payload == NULL)
+		{
+			free(payload);
+			{lv2syscall3(392, 0x1004, 0xa, 0x1b6); }
+			return FAILED;
+		}
+		if (install_syscall(1022, payload, size, 0x80000000007F0000ULL) == FAILED)
+		{
+			free(payload);
+			{lv2syscall3(392, 0x1004, 0xa, 0x1b6); }
+			return FAILED;
+		}
 		free(payload);
 		lv2_poke(0x8000000000003D90ULL, 0x386000014E800020ULL); // /patch permission 4.xx, usually "fixed" by warez payload
 		load_all_prx(PLUGINS_PATH, 1);
 		{lv2syscall3(392, 0x1004, 0x7, 0x36); }
-		return 0;
+		return SUCCESS;
 	}
-	return 0;
 }
 
