@@ -111,7 +111,10 @@ int get_lv2_version()
 			return 0x470D;
 		break;
 		case 0x800000000034FBB0ULL:
-			return 0x475C;
+			return(lv2_peek(0x80000000002FCB68ULL)==0x323031352F30382FULL)?0x476C:0x475C;
+		break;
+		case 0x80000000003758E0ULL:
+			return 0x475D;
 		break;
 		default:
 			return 0;
@@ -201,6 +204,12 @@ uint64_t get_syscall_table()
 			return 0x800000000038A368ULL;
 		break;
 		case 0x475C:
+			return 0x8000000000363BE0ULL;
+		break;
+		case 0x475D:
+			return 0x800000000038A3E8ULL;
+		break;
+		case 0x476C:
 			return 0x8000000000363BE0ULL;
 		break;
 		default:

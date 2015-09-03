@@ -53,4 +53,8 @@ all:
 	make -f Makefile_4.70D --no-print-directory
 	make -f Makefile_4.75 clean --no-print-directory
 	make -f Makefile_4.75 --no-print-directory
+	make -f Makefile_4.75D clean --no-print-directory
+	make -f Makefile_4.75D --no-print-directory
+	make -f Makefile_4.76 clean --no-print-directory
+	make -f Makefile_4.76 --no-print-directory
 	rm -f *.o *.elf *.map payload_src/*.o lv2/src/*.o lv1/src/*.o
