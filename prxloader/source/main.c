@@ -96,13 +96,14 @@ int get_lv2_version()
 		case 0x800000000034F950ULL:
 			return 0x460C;
 		break;
+		case 0x8000000000375500ULL:
+			return 0x460D;
+		break;
 		case 0x800000000034F960ULL:
-			if(lv2_peek(0x800000000031EBA8ULL)==0x323031342F31312FULL) return 0x466C;
-			else return 0x465C;
+			return (lv2_peek(0x80000000002FC938ULL)==0x323031342F31312FULL) ? 0x466C : 0x465C;
 		break;
 		case 0x8000000000375510ULL:
-			if(lv2_peek(0x800000000031EBA8ULL)==0x323031342F31312FULL) return 0x466D;
-			else return 0x465D;
+			return (lv2_peek(0x800000000031EBA8ULL)==0x323031342F31312FULL) ? 0x466D : 0x465D;
 		break;
 		case 0x800000000034FB10ULL:
 			return 0x470C;
@@ -111,10 +112,9 @@ int get_lv2_version()
 			return 0x470D;
 		break;
 		case 0x800000000034FBB0ULL:
-			return(lv2_peek(0x80000000002FCB68ULL)==0x323031352F30382FULL)?0x476C:0x475C;
-		break;
+			return (lv2_peek(0x80000000002FCB68ULL)==0x323031352F30382FULL) ? 0x476C : 0x475C;
 		case 0x80000000003758E0ULL:
-			return 0x475D;
+			return (lv2_peek(0x800000000031EF48ULL)==0x323031352F30382FULL) ? 0x476D : 0x475D;
 		break;
 		default:
 			return 0;
@@ -185,6 +185,9 @@ uint64_t get_syscall_table()
 		case 0x460C:
 			return 0x8000000000363A18ULL;
 		break;
+		case 0x460D:
+			return 0x800000000038A120ULL;
+		break;
 		case 0x465C:
 			return 0x8000000000363A18ULL;
 		break;
@@ -211,6 +214,9 @@ uint64_t get_syscall_table()
 		break;
 		case 0x476C:
 			return 0x8000000000363BE0ULL;
+		break;
+		case 0x476D:
+			return 0x800000000038A3E8ULL;
 		break;
 		default:
 			return 0;

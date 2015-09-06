@@ -39,6 +39,8 @@ all:
 	make -f Makefile_4.55D --no-print-directory
 	make -f Makefile_4.60 clean --no-print-directory
 	make -f Makefile_4.60 --no-print-directory
+	make -f Makefile_4.60D clean --no-print-directory
+	make -f Makefile_4.60D --no-print-directory
 	make -f Makefile_4.65 clean --no-print-directory
 	make -f Makefile_4.65 --no-print-directory
 	make -f Makefile_4.65D clean --no-print-directory
@@ -57,4 +59,6 @@ all:
 	make -f Makefile_4.75D --no-print-directory
 	make -f Makefile_4.76 clean --no-print-directory
 	make -f Makefile_4.76 --no-print-directory
+	make -f Makefile_4.76D clean --no-print-directory
+	make -f Makefile_4.76D --no-print-directory
 	rm -f *.o *.elf *.map payload_src/*.o lv2/src/*.o lv1/src/*.o

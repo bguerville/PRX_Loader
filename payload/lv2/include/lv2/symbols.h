@@ -613,6 +613,36 @@
     #define extend_kstack_symbol                        0x73750 //done
     #define syscall_table_symbol                        0x388488 //done
 	#define process_rtoc_entry_1						-0x77A0 
+#elif defined(FIRMWARE_4_60DEX)
+    #define TOC                                         0x375500 // Checked
+    #define copy_from_user_symbol                       0x100CC  // Checked
+    #define copy_from_process_symbol                    0xFD78   // Checked
+    #define page_allocate_symbol                        0x63CD8  // Checked
+    #define page_free_symbol                            0x6373C  // Checked
+    #define page_export_to_proc_symbol                  0x63E74  // Checked
+    #define page_unexport_from_proc_symbol              0x63630  // Checked
+	#define sprintf_symbol                              0x52438  // Checked
+    #define snprintf_symbol                             0x523A4  // Checked
+    #define strcmp_symbol                               0x51168  // Checked
+	#define ppu_thread_join_symbol                      0x14704  // Checked
+    #define create_user_thread2_symbol                  0x26D2C  // Checked
+    #define start_thread_symbol                         0x25864  // Checked
+    #define run_thread_symbol                           0x25028  // Checked
+    #define register_thread_symbol                      0x276EF4 // Checked
+    #define allocate_user_stack_symbol                  0x2776DC // Checked
+    #define prx_load_module_symbol                      0x8D27C // Checked
+    #define prx_start_module_symbol                     0x8BF48 // Checked
+    #define prx_stop_module_symbol                      0x8D320 // Checked
+    #define prx_unload_module_symbol                    0x8BC7C // Checked
+    #define extend_kstack_symbol                        0x73B68  // Checked
+    #define syscall_table_symbol                        0x38A120 // Checked
+    #define process_rtoc_entry_1                        -0x77A0 //found at 0x1BC02 88603FC0800163DE0005E87D0000
+	#define alloc_symbol								0x68168 // bytes matched: 0x80  2C2300007C85237838C000007C641B784D820020E9229F70E86900004BFFFEB8
+	#define dealloc_symbol								0x685A4 // bytes matched: 0x80  E9229F707C85237838C000007C641B78E86900004BFFFBD0F821FF717C0802A6
+	#define cellFsOpen_symbol							0x2BB2CC // bytes matched: 0x54  F821FF517C0802A6FB010070FB610088FBA10098FBC100A07C7D1B78EBC22EA8
+	#define cellFsClose_symbol         				     0x2BB134 // bytes matched: 0x1C  F821FF617C0802A6FBC10090EBC22EA8FBA10088F80100B07C7D1B78
+	#define cellFsRead_symbol							0x2BB270 // bytes matched: 0x34  2C2600007C0802A63D208001F821FF71FBE10080F80100A07CDF33786129000D
+    #define cellFsStat_symbol                           0x2BAAE8 // bytes matched: 0x38  F821FF617C0802A6FB610078FBA10088FBC100907C7D1B78EBC22EA87C9B2378
 #elif defined(FIRMWARE_4_65DEX)  // Ported by Joonie, special thanks to @aldostools for his awesome Getsymbol tool!!!!
     #define TOC                                         0x375510 //done
     #define copy_from_user_symbol                       0x100D0 // bytes matched: 0x60  2C2500007C0802A6F821FF71FBA10078FBC10080FBE10088FB8100707C7F1B78
@@ -690,6 +720,32 @@
 	#define process_rtoc_entry_1				-0x77A0 //found at 0x1BC03 88603FC0800163DE0005E87D0000
 	#define syscall_table_symbol				0x38A368 //done
 #elif defined(FIRMWARE_4_75DEX)
+	#define TOC								0x3758E0 //
+	#define copy_from_user_symbol			0x100D0 // 
+	#define copy_from_process_symbol		0xFD7C // 
+	#define page_allocate_symbol			0x63D64 // 
+	#define page_free_symbol				0x637C8 // 
+	#define page_export_to_proc_symbol		0x63F00 // 
+	#define page_unexport_from_proc_symbol	0x636BC // 
+	#define printf_symbol					0x278978 // 
+	#define sprintf_symbol					0x4EA94 // 
+	#define snprintf_symbol					0x523A8 // 
+	#define strcmp_symbol					0x5116C // 
+	#define ppu_thread_join_symbol			0x14708 // 
+	#define create_user_thread2_symbol		0x26D30 // 
+	#define start_thread_symbol				0x25868 // 
+	#define run_thread_symbol				0x2502C // 
+	#define register_thread_symbol			0x26E270 // 
+	#define allocate_user_stack_symbol		0x26EA58 // 
+	#define deallocate_user_stack_symbol	0x26E9C0 // 
+	#define prx_load_module_symbol		    0x8D308 // 
+	#define prx_start_module_symbol			0x8BFD4 // 
+	#define prx_stop_module_symbol			0x8D3AC // 
+	#define prx_unload_module_symbol		0x8BD08 // 
+	#define extend_kstack_symbol			0x73BF4 // 
+	#define syscall_table_symbol			0x38A3E8 //
+	#define process_rtoc_entry_1			-0x77A0 // 
+#elif defined(FIRMWARE_4_76DEX)
 	#define TOC								0x3758E0 //
 	#define copy_from_user_symbol			0x100D0 // 
 	#define copy_from_process_symbol		0xFD7C // 
